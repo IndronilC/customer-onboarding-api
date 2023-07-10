@@ -1,0 +1,111 @@
+buildscript {
+	dependencies {
+		classpath 'org.flywaydb:flyway-mysql:9.8.1'
+	}
+}
+
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.0.6'
+	id 'io.spring.dependency-management' version '1.1.0'
+	id "org.openapi.generator" version "4.2.3"
+	id 'org.flywaydb.flyway' version '9.8.1'
+	}
+
+group = 'com.kanini.corebanking.custonboard'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+flyway {
+	cleanDisabled = false
+	url = 'jdbc:mysql://localhost:3306/customer'
+	user = 'root'
+	password = 'Admin@123'
+	locations = ['classpath:db/mysql/migration']
+}
+
+flywayMigrate.dependsOn classes
+
+compileJava.dependsOn('openApiGenerate')
+
+sourceSets {
+	main {
+		java {
+			srcDir "${rootDir}/openapigenerate/src/main/java"
+		}
+	}
+}
+
+openApiValidate {
+	inputSpec =  "${rootDir}/openapi/openapi-customeronboarding-service.yaml".toString()
+}
+
+openApiGenerate {
+	generatorName = "spring"
+	library = "spring-boot"
+	inputSpec = "${rootDir}/openapi/openapi-customeronboarding-service.yaml".toString()
+	outputDir = "${rootDir}/openapigenerate".toString()
+	systemProperties = [
+			modelDocs      : "false",
+			models         : "",
+			apis           : "",
+			supportingFiles: "false"
+	]
+	configOptions = [
+			useOptional          : "true",
+			swaggerDocketConfig  : "false",
+			performBeanValidation: "false",
+			useBeanValidation    : "false",
+			useTags              : "true",
+			singleContentTypes   : "true",
+			basePackage          : "com.kanini.corebanking.custonboard.api",
+			configPackage        : "com.kanini.corebanking.custonboard.api",
+			title                : rootProject.name,
+			java8                : "false",
+			dateLibrary          : "java8",
+			serializableModel    : "true",
+			artifactId           : rootProject.name,
+			apiPackage           : "com.kanini.corebanking.custonboard.api",
+			modelPackage         : "com.kanini.corebanking.custonboard.api.model",
+			invokerPackage       : "com.kanini.corebanking.custonboard",
+			interfaceOnly        : "true"
+	]
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+	implementation "io.springfox:springfox-swagger2:2.9.2" // see https://github.com/OpenAPITools/openapi-generator/issues/4245
+	implementation "org.openapitools:jackson-databind-nullable:0.1.0"
+	implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.15.1'
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+	implementation 'javax.annotation:javax.annotation-api:1.3.2'
+	implementation 'org.modelmapper:modelmapper:3.0.0'
+	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-mysql'
+    implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation('com.h2database:h2')
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+
+

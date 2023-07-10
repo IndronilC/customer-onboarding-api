@@ -1,0 +1,77 @@
+openapi: "3.0.0"
+servers:
+  - url: http://localhost:8080/api
+info:
+  version: 1.0.0
+  title: Customer onboarding API Specification.
+paths:
+  /customers/register:
+    post:
+      tags:
+        - customers
+      summary: Registers a new Customer
+      description: Initiates a customer onboarding operation where it registers a new customer post accepting and inspecting all the details.
+      operationId: registerCustomer
+      requestBody:
+        description: All the fields required to register the new customer.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerRequest'
+        required: true
+      responses:
+        201:
+          description: Customer creation Success
+          content:
+           application/json:
+             schema:
+               $ref: '#/components/schemas/Customer'
+        401:
+          description: Validation Error Has Occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    Customer:
+      type: object
+      properties:
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        dob:
+          type: string
+          format: date
+          description: Date of Birth
+          example: "2021-01-30"
+        aadharNo:
+           type: string
+    ErrorResponse:
+      type: object
+      properties:
+        errorCode:
+          type: integer
+        errorReason:
+          type: string
+        errorSource:
+           type: string
+    CustomerRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        dob:
+          type: string
+          format: date
+          description: Date of Birth
+          example: "2021-01-30"
+        aadharNo:
+           type: string
