@@ -1,0 +1,1 @@
+ALTER TABLE Customer ADD FOREIGN KEY(customer_proof_id) REFERENCES customer_identification(proof_id);

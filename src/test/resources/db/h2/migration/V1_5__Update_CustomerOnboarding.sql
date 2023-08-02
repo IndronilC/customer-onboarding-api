@@ -1,0 +1,1 @@
+ALTER TABLE Customer ADD COLUMN middle_name varchar(255) NOT NULL;

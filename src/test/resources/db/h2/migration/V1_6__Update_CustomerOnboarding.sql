@@ -1,0 +1,5 @@
+ALTER TABLE Customer DROP CONSTRAINT FK_CUSTOMER_PROOF_ID;
+ALTER TABLE customer_identification ALTER COLUMN proof_id binary(16) NOT NULL;
+ALTER TABLE Customer ALTER COLUMN customer_proof_id binary(16) NOT NULL;
+ALTER TABLE Customer ADD CONSTRAINT FK_CUSTOMER_PROOF_ID FOREIGN KEY(customer_proof_id) REFERENCES customer_identification(proof_id);
+ALTER TABLE Customer DROP CONSTRAINT FK_CUSTOMER_PROOF_ID;

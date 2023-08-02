@@ -1,0 +1,1 @@
+ALTER TABLE Customer ALTER COLUMN id binary(16) NOT NULL;
