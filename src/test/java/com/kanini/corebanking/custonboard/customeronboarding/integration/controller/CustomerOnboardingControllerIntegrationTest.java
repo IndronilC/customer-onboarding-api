@@ -1,14 +1,18 @@
 package com.kanini.corebanking.custonboard.customeronboarding.integration.controller;
 
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kanini.corebanking.custonboard.api.model.Customer;
 import com.kanini.corebanking.custonboard.api.model.CustomerRequest;
-import com.kanini.corebanking.custonboard.customeronboarding.controller.exception.CustomerOnboardingControllerException;
 import com.kanini.corebanking.custonboard.customeronboarding.common.errormsg.ErrorMessages;
 import com.kanini.corebanking.custonboard.customeronboarding.data.model.repositories.CustomerOnboardingRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.kanini.corebanking.custonboard.customeronboarding.controller.exception.CustomerOnboardingRequestNotFoundException;
+import com.kanini.corebanking.custonboard.customeronboarding.services.exception.CustomerOnboardingBusinessException;
+import static com.kanini.corebanking.custonboard.customeronboarding.util.CustomerOnboardingTestUtil.createMockCustomer;
+import static com.kanini.corebanking.custonboard.customeronboarding.util.CustomerOnboardingTestUtil.createMockCustomerRequest;
+import static com.kanini.corebanking.custonboard.customeronboarding.util.CustomerOnboardingTestUtil.getContent;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +23,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.time.LocalDate;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -57,7 +67,7 @@ public class CustomerOnboardingControllerIntegrationTest {
         MockHttpServletRequestBuilder mockRequest = post("/customers/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(getContent(customerRequest));
+                .content(getContent(objectMapper, customerRequest));
 
         ResultActions response = mockMvc.perform(mockRequest);
 
@@ -81,7 +91,11 @@ public class CustomerOnboardingControllerIntegrationTest {
      * <p> This method tests a negative scenario which could be fictitious
      * where an empty {@link com.kanini.corebanking.custonboard.api.model.CustomerRequest} which has null fields
      * if is sent the <em>registerCustomer</em> method of <em>CustomerOnbaordingController</em> class
+     * <<<<<<< HEAD
      * should throw an application exception of type {@link com.kanini.corebanking.custonboard.customeronboarding.controller.exception.CustomerOnboardingControllerException}
+     * =======
+     * should throw an application exception of type {@link CustomerOnboardingRequestNotFoundException}
+     * >>>>>>> master
      * </p>
      * <p>This test case verifies the same by mocking the Spring MVC layer by using
      * {@link org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc}
@@ -100,43 +114,45 @@ public class CustomerOnboardingControllerIntegrationTest {
         MockHttpServletRequestBuilder mockRequest = post("/customers/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(getContent(customerRequest));
+                .content(getContent(objectMapper, customerRequest));
 
         ResultActions response = mockMvc.perform(mockRequest);
         response.andDo(print())
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException()
-                        instanceof CustomerOnboardingControllerException))
+                        instanceof CustomerOnboardingRequestNotFoundException))
                 .andExpect(result ->
-                        assertEquals(ErrorMessages.ERROR_PLEASE_PROVIDE_CUSTOMER_ONBOARDING_INFO.toString(),
+                        assertEquals(ErrorMessages.ERROR_PLEASE_PROVIDE_CUSTOMER_ONBOARDING_INFO.getErrorValue(),
                                 result.getResolvedException().getMessage()));
-
-
+  }
+    @ParameterizedTest
+    @MethodSource("createStubOfInCompleteCustomerRequest")
+    public void givenInCompleteCustomerRequestObject_whenCreateCustomer_thenReturnErrorResponse
+            (CustomerRequest inCompleteCustomerRequest) throws Exception {
+        CustomerRequest localInCompleteCustomerRequest = inCompleteCustomerRequest;
+        MockHttpServletRequestBuilder mockRequest = post("/customers/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(getContent(objectMapper, localInCompleteCustomerRequest));
+        ResultActions response = mockMvc.perform(mockRequest);
+        response.andDo(print())
+                .andExpect(status().is5xxServerError())
+                .andExpect(result -> assertTrue(result.getResolvedException()
+                        instanceof CustomerOnboardingBusinessException))
+                .andExpect(result -> assertEquals(
+                        ErrorMessages.ERROR_PLEASE_PROVIDE_ALL_REQUISITE_CUSTOMER_ONBOARDING_INFO.getErrorValue(),
+                        result.getResolvedException().getMessage()));
     }
 
-    private String getContent(CustomerRequest customerRequest)
-            throws JsonProcessingException {
-        return objectMapper.writeValueAsString(customerRequest);
-    }
-
-    private CustomerRequest createMockCustomerRequest() {
-        CustomerRequest customerRequest = new CustomerRequest();
-        customerRequest.setFirstName("Indronil");
-        customerRequest.setMiddleName("Kumar");
-        customerRequest.setLastName("Chakraborty");
-        customerRequest.setDob(LocalDate.parse("1971-07-20"));
-        customerRequest.setAadharNo("10295787898");
-        return customerRequest;
-    }
-
-    private Customer createMockCustomer() {
-        Customer customer = new Customer();
-        customer.setFirstName("Indronil");
-        customer.setMiddleName("Kumar");
-        customer.setLastName("Chakraborty");
-        customer.setDob(LocalDate.parse("1971-07-20"));
-        customer.setAadharNo("10295787898");
-        return customer;
+    private static Stream<CustomerRequest> createStubOfInCompleteCustomerRequest() {
+        CustomerRequest inCompleteCustomerRequest = new CustomerRequest();
+        inCompleteCustomerRequest.setFirstName(null);
+        inCompleteCustomerRequest.setDob(LocalDate.parse("1971-07-17"));
+        inCompleteCustomerRequest.setLastName("Rahman");
+        inCompleteCustomerRequest.setFirstName("Syed");
+        inCompleteCustomerRequest.setMiddleName("Arifur");
+        inCompleteCustomerRequest.aadharNo(null);
+        return Stream.of(inCompleteCustomerRequest);
     }
 
 }

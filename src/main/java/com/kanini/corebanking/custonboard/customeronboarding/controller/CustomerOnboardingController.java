@@ -3,7 +3,7 @@ package com.kanini.corebanking.custonboard.customeronboarding.controller;
 import com.kanini.corebanking.custonboard.api.CustomersApi;
 import com.kanini.corebanking.custonboard.api.model.Customer;
 import com.kanini.corebanking.custonboard.api.model.CustomerRequest;
-import com.kanini.corebanking.custonboard.customeronboarding.controller.exception.CustomerOnboardingControllerException;
+import com.kanini.corebanking.custonboard.customeronboarding.controller.exception.CustomerOnboardingRequestNotFoundException;
 import com.kanini.corebanking.custonboard.customeronboarding.dto.CustomerDTO;
 import com.kanini.corebanking.custonboard.customeronboarding.common.errormsg.ErrorMessages;
 import com.kanini.corebanking.custonboard.customeronboarding.services.CustomerOnboardingService;
@@ -78,8 +78,8 @@ public class CustomerOnboardingController implements CustomersApi{
     private void checkifCustomerDTOIsNullAndThrowError(CustomerDTO customerDTO) {
         if(Objects.isNull(customerDTO) || checkAllNullObject(customerDTO)){
             log.error("Customer Data should not be Null, cannot allow progress", customerDTO);
-            throw new CustomerOnboardingControllerException
-                    (ErrorMessages.ERROR_PLEASE_PROVIDE_CUSTOMER_ONBOARDING_INFO.toString());
+            throw new CustomerOnboardingRequestNotFoundException
+                    (ErrorMessages.ERROR_PLEASE_PROVIDE_CUSTOMER_ONBOARDING_INFO.getErrorValue());
         }
     }
 

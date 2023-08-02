@@ -5,7 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kanini.corebanking.custonboard.api.model.Customer;
 import com.kanini.corebanking.custonboard.api.model.CustomerRequest;
 import com.kanini.corebanking.custonboard.customeronboarding.controller.CustomerOnboardingController;
-import com.kanini.corebanking.custonboard.customeronboarding.controller.exception.CustomerOnboardingControllerException;
+import com.kanini.corebanking.custonboard.customeronboarding.controller.exception.CustomerOnboardingRequestNotFoundException;
+
 import com.kanini.corebanking.custonboard.customeronboarding.common.errormsg.ErrorMessages;
 import com.kanini.corebanking.custonboard.customeronboarding.dto.CustomerDTO;
 import com.kanini.corebanking.custonboard.customeronboarding.services.CustomerOnboardingService;
@@ -161,13 +162,12 @@ public class CustomerOnboardingControllerTest {
         // also verify the exception we are throwing and the message
         ResultActions response = mockMvc.perform(mockRequest);
         response.andDo(print())
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException()
-                        instanceof CustomerOnboardingControllerException))
+                        instanceof CustomerOnboardingRequestNotFoundException))
                 .andExpect(result ->
-                        assertEquals(ErrorMessages.ERROR_PLEASE_PROVIDE_CUSTOMER_ONBOARDING_INFO.toString(),
+                        assertEquals(ErrorMessages.ERROR_PLEASE_PROVIDE_CUSTOMER_ONBOARDING_INFO.getErrorValue(),
                                 result.getResolvedException().getMessage()));
-
 
     }
 

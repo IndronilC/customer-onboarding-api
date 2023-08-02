@@ -45,9 +45,6 @@ public class CustomerEntity implements Serializable {
     private OffsetDateTime createdAt;
     @Column(name="updated_At", nullable = false)
     private OffsetDateTime updatedAt;
-    /*@Column(name="customer_proof_id", nullable = false)
-    private UUID customerProofId;*/
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_proof_id", referencedColumnName = "proof_id")
     private CustomerIdentificationEntity customerIdentificationEntity;

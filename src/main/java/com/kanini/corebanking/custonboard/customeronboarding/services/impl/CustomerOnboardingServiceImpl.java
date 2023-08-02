@@ -55,7 +55,7 @@ public class CustomerOnboardingServiceImpl implements CustomerOnboardingService 
             customerDTO = getSavedCustomerDTO(savedCustomerEntity);
         } catch (Exception e) {
             log.error("Exception in registerCustomer {},{}", e, e.getMessage());
-            throw new CustomerOnboardingBusinessException(e.getMessage(), e);
+            throw new CustomerOnboardingBusinessException(ErrorMessages.ERROR_PLEASE_PROVIDE_ALL_REQUISITE_CUSTOMER_ONBOARDING_INFO.getErrorValue(), e);
         }
         return customerDTO;
     }

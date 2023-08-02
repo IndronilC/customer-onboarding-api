@@ -88,6 +88,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
 	implementation "io.springfox:springfox-swagger2:2.9.2" // see https://github.com/OpenAPITools/openapi-generator/issues/4245
+	implementation "io.springfox:springfox-swagger2:2.9.2"
 	implementation "org.openapitools:jackson-databind-nullable:0.1.0"
 	implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.15.1'
 	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
@@ -96,6 +97,13 @@ dependencies {
 	implementation 'org.flywaydb:flyway-core'
 	implementation 'org.flywaydb:flyway-mysql'
     implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+	// This is to fix the reason: class file for javax.annotation.meta.When not found - warning
+	// this has been inducted per stackoverflow article guidance
+	implementation 'com.google.code.findbugs:jsr305:3.0.2'
+	// This is to ensure that @ParameterizedTest Annotation work
+	// else it will give factory method not found error
+	testImplementation'org.junit.jupiter:junit-jupiter-params:5.8.1'
+
     compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
