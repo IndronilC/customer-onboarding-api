@@ -1,6 +1,6 @@
 package com.kanini.corebanking.custonboard.customeronboarding.unit.services;
 
-import com.kanini.corebanking.custonboard.customeronboarding.common.util.CustomerOnboardDateUtil;
+import com.kanini.corebanking.custonboard.customeronboarding.common.util.datefunction.CustomerOnboardDateUtil;
 import com.kanini.corebanking.custonboard.customeronboarding.data.model.entities.CustomerEntity;
 import com.kanini.corebanking.custonboard.customeronboarding.data.model.entities.CustomerIdentificationEntity;
 import com.kanini.corebanking.custonboard.customeronboarding.data.model.repositories.CustomerIdentificationRepository;

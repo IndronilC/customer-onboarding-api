@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.kanini.corebanking.custonboard.api.model.Customer;
 import com.kanini.corebanking.custonboard.api.model.CustomerRequest;
-import com.kanini.corebanking.custonboard.customeronboarding.common.util.CustomerOnboardDateUtil;
+import com.kanini.corebanking.custonboard.customeronboarding.common.util.datefunction.CustomerOnboardDateUtil;
 import com.kanini.corebanking.custonboard.customeronboarding.data.model.entities.CustomerEntity;
 
 import java.time.LocalDate;

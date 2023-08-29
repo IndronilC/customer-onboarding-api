@@ -1,4 +1,4 @@
-package com.kanini.corebanking.custonboard.customeronboarding.common.util;
+package com.kanini.corebanking.custonboard.customeronboarding.common.util.datefunction;
 
 import java.time.OffsetDateTime;
 

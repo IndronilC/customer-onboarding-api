@@ -12,7 +12,7 @@ import java.io.Serializable;
 /**
  * Customer
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-08-02T18:50:50.491954800+05:30[Asia/Calcutta]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2023-08-29T19:29:32.690056600+05:30[Asia/Calcutta]")
 
 public class Customer  implements Serializable {
   private static final long serialVersionUID = 1L;
