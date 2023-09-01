@@ -1,5 +1,6 @@
 package com.kanini.corebanking.custonboard.customeronboarding.data.model.entities;
 
+import com.kanini.corebanking.custonboard.customeronboarding.common.util.encryption.CustomerOnboardingEncrypter;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,10 +22,13 @@ public class CustomerIdentificationEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name="proof_id", nullable = false)
     private UUID proofId;
+
     @Column(name="aadhar_no", nullable = false)
     private BigInteger aadharNo;
+
     @Column(name="created_At", nullable = false)
     private OffsetDateTime createdAt;
+
     @Column(name="updated_At", nullable = false)
     private OffsetDateTime updatedAt;
 

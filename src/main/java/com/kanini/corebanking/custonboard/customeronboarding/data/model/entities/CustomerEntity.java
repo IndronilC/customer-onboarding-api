@@ -1,7 +1,9 @@
 package com.kanini.corebanking.custonboard.customeronboarding.data.model.entities;
 
+import com.kanini.corebanking.custonboard.customeronboarding.common.util.encryption.CustomerOnboardingEncrypter;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,10 +35,14 @@ public class CustomerEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Convert(converter = CustomerOnboardingEncrypter.class)
     @Column(name="first_name", nullable = false)
     private String firstName;
+    @Convert(converter = CustomerOnboardingEncrypter.class)
     @Column(name="middle_name", nullable = false)
     private String middleName;
+    @Convert(converter = CustomerOnboardingEncrypter.class)
     @Column(name="last_name", nullable = false)
     private String lastName;
     @Column(name="date_of_birth", nullable = false)
